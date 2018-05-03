@@ -43,7 +43,6 @@ class TodoList extends Component {
                 completed: false
             };
 
-
             axios.post('/api/todos/addtodo', {
                 text: champs,
                 listId: newTodo.listId
@@ -70,7 +69,8 @@ class TodoList extends Component {
     }
 
     deleteTodo (id) {
-        console.log(this.state);
+        console.log('RARA', id);
+        
         let filteredTodos = this.state.todos.data.filter( function (todo) {
             return (todo.id !== id);
         })
@@ -89,6 +89,8 @@ class TodoList extends Component {
         let todo = this.state.todos.data.filter( function (todo) {
             return (todo.id === id);
         })
+
+        console.log(todo);
 
         axios.post(`/api/todos/${id}`, {
             completed: todo[0].completed

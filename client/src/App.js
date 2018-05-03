@@ -40,7 +40,7 @@ class App extends Component {
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
                         
-                       {/*<Route path="/todos/" exact strict component={Tasks}/>                    
+                       <Route path="/todos/" exact strict component={Tasks}/>                    
                         <Route path="/login/" exact strict render={
                             () => {
                                 return (<LoginForm/>);
@@ -55,7 +55,7 @@ class App extends Component {
                                 )
                             }
                         }/>
-                    */}
+                    
                         <Route path="/list/:id" exact strict render={
                             ({match}) => {
                                 return (

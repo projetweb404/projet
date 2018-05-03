@@ -19,6 +19,7 @@ class Todos extends Component {
 
 
     delete(id) {
+       console.log('todo', this.state.todos);
         this.props.deleteTodo(id);
     }
 
@@ -93,7 +94,6 @@ class Todos extends Component {
                         </FlipMove>
                     </ul>
                 </div>
-
             </div>
         )
     }

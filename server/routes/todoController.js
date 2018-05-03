@@ -38,8 +38,11 @@ let deleteTodo = function (req, res) {
     Todo.findOneAndRemove({
         _id: req.params.id
     }).then(() => {
+        console.log('supprimée');
+
         res.send({'statut':'todo supprimée'});
     }).catch((e) => {
+        console.log('ERROR DELETE');
         res.send(e);
     })
 };   
