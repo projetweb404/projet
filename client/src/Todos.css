@@ -1,0 +1,40 @@
+.list-of-todos li {
+    padding: 15px;
+    background-color: bisque;
+    margin-top: 10px;
+    list-style: none;
+    border-radius: 6px;
+
+    transition: background-color .2s ease-out;
+}
+
+.list-of-todos li:hover {
+    color: black;
+    background-color:rgba(255, 228, 196, 0.733);
+}
+
+ul.list-of-todos {
+    padding-left: 0px; /** ou padding tout court pour enlever l'effet d'alinéa **/
+}
+
+.list-of-todos li .deleteTodo {
+    background-color: rgba(255, 0, 0, 0);
+    background-image: url("https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/Cancel_delete_remove_stop_x_no_close_cross.png");
+    background-repeat: no-repeat;
+    background-size: 15px;
+    border: none;
+    padding: 10px;
+    float: right;
+    outline: none;
+}
+
+.list-of-todos li .validateTodo {
+    background-color: rgba(255, 0, 0, 0);
+    background-image: url("https://cdn1.iconfinder.com/data/icons/basic-ui-elements-colored/700/011_yes-2-256.png");
+    background-repeat: no-repeat;
+    background-size: 15px;
+    border: none;
+    padding: 10px;
+    float: right;
+    outline: none;
+}

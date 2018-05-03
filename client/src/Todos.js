@@ -1,14 +1,20 @@
 import React, {Component} from 'react';
 import FlipMove from 'react-flip-move';
 import axios from 'axios';
+import './Todos.css';
 
 class Todos extends Component {
     constructor(props) {
         super(props);
         
+        this.state = {
+            todos: []
+        };
 
         this.autoRender = this.autoRender.bind(this); 
         this.validate = this.validate.bind(this);
+        this.add = this.add.bind(this);
+        /*this.fetchTodos = this.fetchTodos.bind(this);*/
     }
 
 
@@ -20,8 +26,18 @@ class Todos extends Component {
         this.props.validateTodo(id);
     }
 
+    add(e) {
+        e.preventDefault();
+        this.props.addTodo(e, this._inputElement.value);
 
-    fetchTodos (id) {
+        this._inputElement.value = "";
+    }
+
+/*
+    fetchTodos (e) {
+
+        alert('');
+
         console.log('goooonne');
 
         axios.get(`/api/todos/${this.props.listId}`)
@@ -31,17 +47,17 @@ class Todos extends Component {
             console.log(err);
         });
     }
-    
-    autoRender (todo) {
-        console.log(todo.id);
+*/
+    autoRender (todo, i) {
+        console.log('todo', todo.id);
         return (
-            <li id={todo.id} key={todo.id}>{todo.text}
+            <li id={todo.id} key={i}>{todo.text}
                 <button onClick={ () => {
-                        this.delete(todo.id);
+                        this.props.deleteTodo(todo.id);
                     }} className="deleteTodo">
                 </button>
                 <button onClick={ () => {
-                        this.validate(todo.id);
+                        this.props.validateTodo(todo.id);
                     }} className="validateTodo">
                 </button>               
             </li>
@@ -52,41 +68,33 @@ class Todos extends Component {
 
     render () {
         
-        fetch(this.props.id);
-        //let todoEntries = this.props.entries; //on récupère les todos
+        let todoEntries = this.props.entries;
         
-       // let listTodos = todoEntries.map((t) => this.autoRender(t)); //on map through them pour les display un à un grace à notre methode
+        let listTodos = todoEntries.map((t, i) => this.autoRender(t, i)); //on map through them pour les display un à un grace à notre methode
 
-    // let listTodos = 
         return (
 
-            <div>
-                <div className="todo-list">
-                    <form onSubmit={this.addTodo} className="form-inline my-2 my-lg-0">
+            <div className="container">
+                <div className="todo-list" /*onLoad={this.fetchTodos}*/>
+                    <form onSubmit={this.add} className="form-inline my-2 my-lg-0">
                             <input className="form-control mr-sm-2" placeholder="what r u gonna do ?" ref={(a) => this._inputElement = a}>
                             </input>
                         <button className="btn btn-primary my-2 my-sm-0" type="submit">add it</button>
                     </form>
                     <div className="row">
-                    <div className="col-md-4">
-
+                        <div className="col-md-4">
+                        </div>
+                        <div className="col-md-4">
+                        </div>
                     </div>
-                    <div className="col-md-4">
-                    </div>
+                    <ul className="list-of-todos">
+                        <FlipMove duration={250} easing="ease-out">
+                            {listTodos}
+                        </FlipMove>
+                    </ul>
                 </div>
+
             </div>
-                <ul className="list-of-todos">
-                    <FlipMove duration={250} easing="ease-out">
-                        {/*listTodos*/}
-                    </FlipMove>
-                </ul>
-        </div>
-
-
-
-
-
-
         )
     }
 }

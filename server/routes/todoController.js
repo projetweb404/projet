@@ -10,9 +10,12 @@ let getAll = function (req, res) {
 
 let addTodo = function (req, res) {
 
+    console.log('C est là id', req.body.listId);
+    console.log('C est là text', req.body.text);
+
     let newTodo = new Todo({
         text: req.body.text,
-        list: new mongoose.Types.ObjectId(req.body.list),
+        list: new mongoose.Types.ObjectId(req.body.listId),
         creator: new mongoose.Types.ObjectId('123456789124')
     });
 
@@ -21,8 +24,6 @@ let addTodo = function (req, res) {
     newTodo.save()
     .then ((todoAddedTodo) => {
         res.send(todoAddedTodo._id);
-
-
 
     }).catch ((e) => {
         res.json({
@@ -39,7 +40,7 @@ let deleteTodo = function (req, res) {
     }).then(() => {
         res.send({'statut':'todo supprimée'});
     }).catch((e) => {
-        res.json(e);
+        res.send(e);
     })
 };   
 
@@ -61,9 +62,8 @@ let validateTodo = function (req, res) {
 
 let getTodos = function (req, res) {
 
-    console.log(req.params.id)
     Todo.find({
-        list: req.params.id
+        list: new mongoose.Types.ObjectId(req.params.id)
     }).then((resultat) => {
         console.log(resultat);
         res.send(resultat);

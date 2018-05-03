@@ -13,7 +13,10 @@ class App extends Component {
     render () {
         return (
             <Router>
-                <div id="router-wrapper"className="container-fluid go">  {/* Très important Router: a un seul et unique gosse */}
+
+                <div id="router-wrapper"className="container-fluid go">
+
+ {/************************************ A TOUJOURS AVOIR *******************************************************************************/}
 
                     <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                         <Link className="navbar-brand col-sm-3 col-md-2 mr-0" to="/profile/">ORGUENIZED</Link>
@@ -24,24 +27,20 @@ class App extends Component {
                         </ul>
                     </nav>  
 
-                    <div className="col-md-2 corps">
-                        <Route path="/" exact strict render={
-                                () => {
-                                    return (
-                                        <nav className="col-md-2 d-none d-md-block bg-light sidebar">
-                                            <div className="sidebar-sticky">
-                                                    <Tasks/>
+                    <div className="col-md-2">
+                        <nav className="col-md-2 d-none d-md-block bg-light sidebar">
+                            <div className="sidebar-sticky">
+                                    <Tasks keh={'oui'}/>
+                            </div>
+                        </nav>
+                    </div>
 
-                                            </div>
-                                        </nav>
-                                    );
-                                }
-                            }/>
-                    </div>                       
+{/************************************ A TOUJOURS AVOIR *******************************************************************************/}                          
+                        <br/>
+                    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
-                    <div className="container corps">
-                        <Route path="/todos/" exact strict component={Tasks}
-                        />                    
+                        
+                       {/*<Route path="/todos/" exact strict component={Tasks}/>                    
                         <Route path="/login/" exact strict render={
                             () => {
                                 return (<LoginForm/>);
@@ -56,27 +55,18 @@ class App extends Component {
                                 )
                             }
                         }/>
-                        <Route path="/list/" exact strict render={
-                            () => {
+                    */}
+                        <Route path="/list/:id" exact strict render={
+                            ({match}) => {
                                 return (
-
-                                    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <br/>
-
-                                        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                                            <Todos/>
-                                        </div>
-                                  </main>
-    
-
-                            )
+                                    <div>                    
+                                        <Tasks id={match.params.id} milieu={true}/>
+                                  </div>
+                                )
                             }
-                        }/>
-
-                    </div>
+                        }/> 
+                        
+                    </main>
             </div>                               
             </Router>
         )

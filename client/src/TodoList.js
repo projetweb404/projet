@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import './TodoList.css';
 import axios from 'axios';
 //import { Link } from 'react-router-dom';
-import Todos from './Todos'
+import Todos from './Todos';
+import { Link } from 'react-router-dom';
+import './App.css';
 
 class TodoList extends Component {
 
@@ -14,7 +16,6 @@ class TodoList extends Component {
             display: false
         };
 
-
         this.addTodo = this.addTodo.bind(this)
         this.deleteTodo = this.deleteTodo.bind(this);
         this.validateTodo = this.validateTodo.bind(this);
@@ -22,37 +23,46 @@ class TodoList extends Component {
         
     }
 
-    addTodo (e) {
-        e.preventDefault(); //enlever l'effet de rafraichissement du bouton
+    componentWillMount () {
+
+        console.log('TodoList id', this.props.listId, this.props.title);
+    }
+
+    addTodo (e, champs) {
+
+        console.log('VERIF', this.props.title);
+
+        e.preventDefault();
         
-        if (this._inputElement.value.length > 0){
+        if (champs.length > 0){
+
             let newTodo = {
-                text: this._inputElement.value,
+                text: champs,
                 id: '',
+                listId: this.props.listId,
                 completed: false
             };
 
-            this.setState((prevState) => { //on veut changer le state du composant, car ajout
-                return {
-                    todos: prevState.todos.concat(newTodo) //on prend l'ancien state, on concat le new todo
-                }
-            });
-
-            //let todoText = this._inputElement;
 
             axios.post('/api/todos/addtodo', {
-                text: this._inputElement.value
+                text: champs,
+                listId: newTodo.listId
             }).then((res) => {
-                console.log('Todo ajoutée avec succès &!');
-                newTodo.id = res.data; // quand on ajoute une todo, mongo associe un id unique, on le recupere ici pour nos besoin
-                console.log(this.state.todos);
-                //console.log(res.data);
+                console.log('Todo ajoutée avec succès !');
+                newTodo.id = res.data;
+               // console.log(this.state.todos);
+
             }).catch((e) => {
                 console.log('Todo non ajoutée !');
                 console.log(e);
             });
 
-            this._inputElement.value = "";
+            this.setState((prevState) => {
+                console.log('Previous state', prevState);
+                return {
+                    todos: prevState.todos.data.concat(newTodo)
+                }
+            });
 
         }else{
 
@@ -61,7 +71,7 @@ class TodoList extends Component {
 
     deleteTodo (id) {
         console.log(this.state);
-        let filteredTodos = this.state.todos.filter( function (todo) {
+        let filteredTodos = this.state.todos.data.filter( function (todo) {
             return (todo.id !== id);
         })
 
@@ -76,7 +86,7 @@ class TodoList extends Component {
 
     validateTodo (id) {
         
-        let todo = this.state.todos.filter( function (todo) {
+        let todo = this.state.todos.data.filter( function (todo) {
             return (todo.id === id);
         })
 
@@ -85,9 +95,9 @@ class TodoList extends Component {
         })
         .then((res) => {
 
-            let temp = JSON.parse(JSON.stringify(this.state.todos))
+            let temp = JSON.parse(JSON.stringify(this.state.todos.data))
 
-            var index = this.state.todos.findIndex(t=> t.id === id);
+            var index = this.state.todos.data.findIndex(t=> t.id === id);
 
             temp[index].completed = res.data.completed;
 
@@ -100,7 +110,6 @@ class TodoList extends Component {
         });
     }
 
-
     createList () {
 
         axios.post('/api/todos/', {title: 'URGENCES'})
@@ -112,47 +121,53 @@ class TodoList extends Component {
 
     }
 
-    componentDidMount () {
+    fetchTodos () {
+    
+        if (this.props.listId){
+            //console.log('ID', this.props.listId);
+            axios.get(`/api/todos/${this.props.listId}`)
+            .then((todos) => {
 
-        let todos = this.props.todos;
+                console.log(todos);
 
-        this.setState({todos: todos});
+                this.setState(() => {
+                    return {
+                        todos: todos,
+                        display: true
+                    }
+                });
 
-        console.log(this.state);
+            }).catch((e) => {
+                console.log('fetch pas bien déroulé');
+                console.log(e);
+            })
+        }
+
     }
 
-    
-    fetchTodos (e) {
-        e.preventDefault();
-        console.log('ID', this.props.id);
-        axios.get(`/api/todos/${this.props.id}`, {ids: this.props.todosIds})
-        .then(() => {
-            console.log('on les a fetch');
-            this.setState({display: true});
-        }).catch(() => {
-            console.log(e);
-        })
+    componentDidMount () {
+
+        this.fetchTodos();
     }
 
     render () {
-       
-        if (this.state.display){
+ 
+        if (!this.props.liste && this.state.todos.data && (this.props.theId === this.props.listId)){
             return (
-
                 <div>
-                    <Todos listId={this.props.id}
-                                deleteTodo={this.deleteTodo}
-                                validateTodo={this.validateTodo}/>                
-                <div>
-                        <span onClick={this.fetchTodos}>{this.props.title}</span>
-                    </div>
-            </div>
+                    <Todos 
+                        listId={this.props.id}
+                        deleteTodo={this.deleteTodo}
+                        validateTodo={this.validateTodo}
+                        addTodo={this.addTodo}
+                        entries={this.state.todos.data}
+                    />                
+                </div>
             )
         }
         return (
-
         <div>
-            <span onClick={this.fetchTodos}>{this.props.title}</span>
+            <span>{this.props.title}</span>
         </div>
         )
     }

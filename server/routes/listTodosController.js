@@ -6,7 +6,6 @@ const { ListeTodos } = require('../models/listeTodos');
 
 let createList = function (req, res) {
    
-
     let newList = new ListeTodos({
         title: req.body.title,
         creator: new mongoose.Types.ObjectId('123456789124')
@@ -23,7 +22,7 @@ let createList = function (req, res) {
             'probleme': e
         })
     });
-}
+};
 
 let getLists = function (req, res) {
 
@@ -36,7 +35,7 @@ let getLists = function (req, res) {
         console.log('couldn t fetch lists');
         res.send(e);
     })
-}
+};
 
 
 module.exports = {
